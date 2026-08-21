@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #fdf0f4;
+  --surface: #fffaf8;
+  --surface-2: #fbe4ea;
+  --accent: #f4c9d6;
+  --accent-strong: #e8a8bc;
+  --text: #1a0f0d;
+  --text-secondary: #6d4c41;
+  --border: rgba(26, 15, 13, 0.08);
+  --button: #1a0f0d;
+  --button-text: #fdf0f4;
+}
+
+.dark {
+  --bg: #3e2723;
+  --surface: #4b332f;
+  --surface-2: #573c37;
+  --accent: #f4c9d6;
+  --accent-strong: #f0b4c7;
+  --text: #f6eee8;
+  --text-secondary: rgba(255, 245, 240, 0.72);
+  --border: rgba(255, 245, 240, 0.1);
+  --button: #f4c9d6;
+  --button-text: #3e2723;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family: var(--font-body), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.55;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--text);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Scrollbars: quiet, not glassy */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
