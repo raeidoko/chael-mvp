@@ -4,11 +4,8 @@ import Link from "next/link";
 import { Bookmark, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Doctor } from "@/lib/types";
-import { useAppStore } from "@/lib/store";
 
 export function DoctorCard({ doctor }: { doctor: Doctor }) {
-  const toggleSaveDoctor = useAppStore((s) => s.toggleSaveDoctor);
-
   return (
     <div className="flex gap-4 rounded-container border border-border bg-surface p-4">
       <Link href={`/care/${doctor.id}`} className="shrink-0 overflow-hidden rounded-photo">
@@ -26,7 +23,6 @@ export function DoctorCard({ doctor }: { doctor: Doctor }) {
           </Link>
           <button
             aria-label={doctor.saved ? "Remove from saved" : "Save doctor"}
-            onClick={() => toggleSaveDoctor(doctor.id)}
             className="shrink-0 text-text-secondary transition-colors hover:text-text"
           >
             <Bookmark size={18} className={cn(doctor.saved && "fill-accent-strong text-accent-strong")} />
