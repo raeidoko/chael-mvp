@@ -88,7 +88,7 @@ export default function SignUpPage() {
           create your account
         </h1>
         <p className="text-sm text-text-secondary mb-8">
-          we'll keep your data private and secure.
+          we&apos;ll keep your data private and secure.
         </p>
 
         <form onSubmit={handleSignUp} className="flex flex-col gap-4">
