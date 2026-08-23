@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Stethoscope } from "lucide-react";
 import { Badge } from "@/components/ui/primitives";
 import { SkinResult } from "@/lib/types";
 
@@ -17,8 +18,22 @@ export function ResultsInlineCard({ result }: { result: SkinResult }) {
       <p className="font-display text-2xl capitalize">{result.condition}</p>
       <div className="mt-3 flex gap-2">
         <Badge tone={severityTone[result.severity]}>{result.severity}</Badge>
-        <Badge tone="neutral">{result.confidence}% confidence</Badge>
       </div>
+
+      {result.see_derm && (
+        <div className="mt-4 flex items-start gap-3 rounded-container bg-surface-2 p-4">
+          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-[#1a0f0d]">
+            <Stethoscope size={15} />
+          </span>
+          <div>
+            <p className="text-sm font-medium text-text">worth seeing a dermatologist</p>
+            <p className="mt-1 text-sm leading-relaxed text-text-secondary">
+              {result.derm_reason ?? "Based on what we're seeing, a dermatologist could give you more personalized guidance."}
+            </p>
+          </div>
+        </div>
+      )}
+
       <p className="mt-4 text-[15px] leading-relaxed text-text-secondary">{result.summary}</p>
     </motion.div>
   );
