@@ -19,7 +19,7 @@ export const user: UserProfile = {
   email: "rae@chael.app",
   photoUrl: ph("rae-profile", 400, 400),
   streakDays: 12,
-  goals: ["Even out jawline breakouts", "Build a calmer nighttime routine"],
+  goals: [""],
 };
 
 export const assessmentQuestions: AssessmentQuestion[] = [

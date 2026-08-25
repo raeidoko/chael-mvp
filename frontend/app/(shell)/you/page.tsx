@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Settings, Flame, ChevronRight } from "lucide-react";
-import { Card, Avatar } from "@/components/ui/primitives";
+import { Card } from "@/components/ui/primitives";
 import { ProgressChart } from "@/components/you/progress-chart";
-import { user as mockUser, progressSeries } from "@/lib/mock-data";
+import { user as mockUser } from "@/lib/mock-data";
 import { supabase } from "@/lib/supabase";
 import { calculateStreak } from "@/lib/streak";
+import { formatDate } from "@/lib/utils";
 
 const tabs = [
   { href: "/you/timeline", label: "timeline" },
@@ -15,9 +16,17 @@ const tabs = [
   { href: "/you/settings", label: "settings" },
 ];
 
+const severityScore: Record<string, number> = {
+  mild: 80,
+  moderate: 50,
+  severe: 20,
+};
+
 export default function YouPage() {
   const [displayName, setDisplayName] = useState<string | null>(null);
   const [streakDays, setStreakDays] = useState(0);
+  const [progressData, setProgressData] = useState<{ label: string; value: number }[]>([]);
+  const [loadingProgress, setLoadingProgress] = useState(true);
 
   useEffect(() => {
     async function loadProfile() {
@@ -25,7 +34,10 @@ export default function YouPage() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
 
-      if (!authUser) return;
+      if (!authUser) {
+        setLoadingProgress(false);
+        return;
+      }
 
       const { data: profile } = await supabase
         .from("profiles")
@@ -39,6 +51,23 @@ export default function YouPage() {
 
       const streak = await calculateStreak(authUser.id);
       setStreakDays(streak);
+
+      const { data: assessments } = await supabase
+        .from("assessments")
+        .select("severity, created_at")
+        .eq("user_id", authUser.id)
+        .order("created_at", { ascending: true });
+
+      if (assessments && assessments.length > 0) {
+        setProgressData(
+          assessments.map((a) => ({
+            label: formatDate(a.created_at),
+            value: severityScore[a.severity ?? "moderate"] ?? 50,
+          }))
+        );
+      }
+
+      setLoadingProgress(false);
     }
 
     loadProfile();
@@ -50,10 +79,7 @@ export default function YouPage() {
     <div className="min-h-screen px-5 pb-10 pt-6 md:px-8">
       <div className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Avatar src={mockUser.photoUrl} alt={name} size={44} />
-            <h1 className="font-display text-3xl">me</h1>
-          </div>
+          <h1 className="font-display text-3xl">me</h1>
           <Link
             href="/you/settings"
             aria-label="Settings"
@@ -88,10 +114,21 @@ export default function YouPage() {
 
         <Card className="mt-6">
           <p className="text-[15px] text-text">skin progress</p>
-          <p className="text-sm text-text-secondary">good progress. keep going, {name}.</p>
-          <div className="mt-5">
-            <ProgressChart data={progressSeries} />
-          </div>
+
+          {loadingProgress ? (
+            <p className="mt-2 text-sm text-text-secondary">loading…</p>
+          ) : progressData.length < 2 ? (
+            <p className="mt-2 text-sm text-text-secondary">
+              not enough history yet, keep checking in with Chael to start seeing your trend.
+            </p>
+          ) : (
+            <>
+              <p className="text-sm text-text-secondary">good progress. keep going, {name}.</p>
+              <div className="mt-5">
+                <ProgressChart data={progressData} />
+              </div>
+            </>
+          )}
         </Card>
 
         <Card className="mt-4 flex items-center gap-4 bg-surface-2">
