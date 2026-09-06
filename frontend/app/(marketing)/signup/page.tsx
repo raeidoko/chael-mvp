@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useChatStore } from "@/lib/store";
+import { logEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -40,7 +41,6 @@ export default function SignUpPage() {
     }
 
     if (data.user) {
-      // Create profile row
       const { error: profileError } = await supabase
         .from("profiles")
         .insert({
@@ -53,7 +53,8 @@ export default function SignUpPage() {
         console.error("Profile creation error:", profileError);
       }
 
-      // Transfer anonymous chat history into the new account
+      logEvent("signed_up");
+
       const localMessages = useChatStore.getState().messages;
 
       if (localMessages.length > 0) {
@@ -76,7 +77,6 @@ export default function SignUpPage() {
         }
       }
 
-      // Redirect to consent page
       router.push("/consent");
     }
   }
