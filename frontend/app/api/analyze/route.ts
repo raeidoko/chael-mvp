@@ -5,6 +5,11 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
 
+// GPT-4o vision calls can legitimately take longer than the platform
+// default (10s on Hobby, 15s default on Pro). This needs a Pro plan or
+// higher to take effect above 10s — see Vercel's function duration limits.
+export const maxDuration = 60
+
 export async function POST(req: NextRequest) {
   try {
     const { imageUrl, questionnaire } = await req.json()
