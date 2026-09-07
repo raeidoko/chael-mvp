@@ -137,7 +137,7 @@ export const useChatStore = create<ChatState>()(
             text: "I've got a first look, now I want to ask a few quick questions so I can actually tell you what's likely going on, not just guess.",
             meta: {
               choices: [
-                { id: "continue", label: "let's do it", href: "/chat/full/assessment" },
+                { id: "continue", label: "let's do it", href: "/chat/assessment" },
               ],
             },
           });
