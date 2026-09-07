@@ -5,7 +5,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 import { AssessmentAnswer, ChatMessage, SkinResult } from "./types";
 import { supabase } from "./supabase";
 import { logEvent } from "./analytics";
-import { compressImage } from "./compress-image";
+import { compressImageDataUrl } from "./compress-image";
 
 let idCounter = 0;
 const nextId = () => `msg-${Date.now()}-${idCounter++}`;
@@ -51,7 +51,7 @@ export const useChatStore = create<ChatState>()(
       },
 
       uploadPhoto: async (imageDataUrl) => {
-        const compressedDataUrl = await compressImage(imageDataUrl);
+        const compressedDataUrl = await compressImageDataUrl(imageDataUrl);
 
         const photoMsgId = nextId();
         const photoMsg: ChatMessage = {
