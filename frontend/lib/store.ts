@@ -3,7 +3,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { AssessmentAnswer, ChatMessage, Doctor, SkinResult } from "./types";
-import { doctors as seedDoctors } from "./mock-data";
 import { supabase } from "./supabase";
 import { logEvent } from "./analytics";
 import { compressImageDataUrl } from "./compress-image";
